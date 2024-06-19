@@ -15,6 +15,7 @@ import org.hibernate.service.ServiceRegistry;
 public class App
 {
     private static Session session;
+    private static SessionFactory sessionFactory;
 
     private static SessionFactory getSessionFactory() throws HibernateException{
         Configuration configuration=new Configuration();
@@ -70,9 +71,13 @@ public class App
     public static void main( String[] args )
     {
         try {
-            SessionFactory sessionFactory = getSessionFactory();
+            System.out.println("we are here");
+            sessionFactory = getSessionFactory();
+            System.out.println("we have session factory");
             session = sessionFactory.openSession();
+            System.out.println("we have session");
             session.beginTransaction();
+            System.out.println("begun transaction");
 
             generateCars();
 

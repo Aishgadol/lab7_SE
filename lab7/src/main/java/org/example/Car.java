@@ -8,8 +8,11 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String licensePlate;
+
     private double price;
+
     @Column(name = "manufacturing_year")
     private int year;
 
