@@ -51,8 +51,43 @@ public class App
         List<Car> data=session.createQuery(query).getResultList();
         return data;
     }
+
+    private static void printAllCars() throws Exception{
+        List<Car> cars=getAllCars();
+        for(Car car:cars){
+            System.out.print("Id: ");
+            System.out.print(car.getId());
+            System.out.print(", License plate: ");
+            System.out.print(car.getLicensePlate());
+            System.out.print(", Price: ");
+            System.out.print(car.getPrice());
+            System.out.print(", Year: ");
+            System.out.print(car.getYear());
+            System.out.print('\n');
+        }
+    }
+
     public static void main( String[] args )
     {
-        System.out.println( "\n\nHello World!\n\n" );
+        try {
+            SessionFactory sessionFactory = getSessionFactory();
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            generateCars();
+
+            printAllCars();
+
+            session.getTransaction().commit();//save everything
+        }
+        catch(Exception e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            System.err.println("Error occured, changes have been rooled back");
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
     }
 }
