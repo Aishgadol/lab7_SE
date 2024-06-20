@@ -10,8 +10,8 @@ public class Car {
     private int id;
 
     private String licensePlate;
-    
-    @Column(name="price of car")
+
+    //@Column(name = "price of car")
     private double price;
 
     @Column(name = "year the car was made")
