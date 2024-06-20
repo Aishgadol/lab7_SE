@@ -82,9 +82,11 @@ public class App
             generateCars();
 
             printAllCars();
+
             Car c=new Car("mycar haha", 9,199);
             session.save(c);
             session.flush();
+            
             session.getTransaction().commit();//save everything
         }
         catch(Exception e) {
