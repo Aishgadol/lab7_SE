@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,6 +22,7 @@ public class App
         Configuration configuration=new Configuration();
         // Add ALL of your entities here. You can also try adding a whole package.
         configuration.addAnnotatedClass(Car.class);
+        configuration.addAnnotatedClass(Person.class);
 
         ServiceRegistry serviceRegistry=new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -45,6 +47,29 @@ public class App
         }
     }
 
+    public static void generatePeople() throws Exception{
+        Random rnd=new Random();
+        List<Car> cars=getAllCars();
+
+        for(int i=0;i<10;i++){
+            Person p=new Person("Chadwick "+rnd.nextInt(100),
+                    "Boseman "+rnd.nextInt(100),
+                    "p"+rnd.nextInt(1000)+""+rnd.nextInt(1000),
+                    "chadwick"+rnd.nextInt(1000)+"@gmail.com");
+            List<Car> myCar=new ArrayList<>();
+            myCar.add(cars.get(9-i));
+            p.setCars(myCar);
+            cars.get(9-i).setOwner(p);
+            session.save(p);
+        }
+        session.flush();
+    }
+
+    /*public static void generateGarages() throws Exception{
+        Random rnd=new Random();
+
+    }*/
+
     public static List<Car> getAllCars() throws Exception{
         CriteriaBuilder builder=session.getCriteriaBuilder();
         CriteriaQuery<Car> query=builder.createQuery(Car.class);
@@ -52,6 +77,7 @@ public class App
         List<Car> data=session.createQuery(query).getResultList();
         return data;
     }
+
 
     private static void printAllCars() throws Exception{
         List<Car> cars=getAllCars();
@@ -80,13 +106,14 @@ public class App
             System.out.println("begun transaction");
 
             generateCars();
+            generatePeople();
 
             printAllCars();
 
             Car c=new Car("mycar haha", 9,199);
             session.save(c);
             session.flush();
-            
+
             session.getTransaction().commit();//save everything
         }
         catch(Exception e) {

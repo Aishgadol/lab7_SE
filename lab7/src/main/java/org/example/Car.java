@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "cars")
@@ -17,6 +18,16 @@ public class Car {
     @Column(name = "year_car_was_made")
     private int year;
 
+    @Column(name="link_to_image")
+    private String link;
+
+    @ManyToOne
+    @JoinColumn(name="owner_id")
+    private Person owner;
+
+    @ManyToMany(mappedBy = "cars")
+    private List<Garage> garages=new ArrayList<>();
+
     public Car() {
     }
 
@@ -25,6 +36,8 @@ public class Car {
         this.licensePlate = licensePlate;
         this.price = price;
         this.year = year;
+        this.link="www."+licensePlate+".com";
+        this.owner=null;
     }
 
     public String getLicensePlate() {
@@ -53,5 +66,21 @@ public class Car {
 
     public int getId() {
         return id;
+    }
+
+    public void setOwner(Person owner){
+        this.owner=owner;
+    }
+
+    public Person getOwner(){
+        return this.owner;
+    }
+
+    public List<Garage> getGarages(){
+        return this.garages;
+    }
+
+    public void setGarages(List<Garage> g){
+        this.garages=g;
     }
 }
