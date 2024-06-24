@@ -83,7 +83,7 @@ public class App
            for(int j = 25*i ; j < (25*(i+1)) ; j++){
                myCar.add(cars.get(j));
            }
-           for(int j=0;j<15;j++){
+           for(int j=0;j<5;j++){
                myp.add(people.get(rnd.nextInt(people.size())));
            }
            g.setCars(myCar);
