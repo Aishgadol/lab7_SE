@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name="Garages")
+@Table(name="garages")
 public class Garage {
 
     @Id
@@ -24,7 +24,7 @@ public class Garage {
     private List<Person> owners=new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name="Garage_Owners",
+    @JoinTable(name="Garage_Cars",
             joinColumns = @JoinColumn(name="garage_id"),
             inverseJoinColumns = @JoinColumn(name="car_id"))
     private List<Car> cars=new ArrayList<>();

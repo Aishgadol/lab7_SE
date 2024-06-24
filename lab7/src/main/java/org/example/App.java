@@ -23,6 +23,7 @@ public class App
         // Add ALL of your entities here. You can also try adding a whole package.
         configuration.addAnnotatedClass(Car.class);
         configuration.addAnnotatedClass(Person.class);
+        configuration.addAnnotatedClass(Garage.class);
 
         ServiceRegistry serviceRegistry=new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -33,7 +34,7 @@ public class App
 
     public static void generateCars() throws Exception {
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             Car car = new Car("MOO-" + random.nextInt(), 100000, 2000 + random.nextInt(19));
             session.save(car);
             /*
@@ -51,24 +52,53 @@ public class App
         Random rnd=new Random();
         List<Car> cars=getAllCars();
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<100 ;i++){
             Person p=new Person("Chadwick "+rnd.nextInt(100),
                     "Boseman "+rnd.nextInt(100),
                     "p"+rnd.nextInt(1000)+""+rnd.nextInt(1000),
                     "chadwick"+rnd.nextInt(1000)+"@gmail.com");
             List<Car> myCar=new ArrayList<>();
-            myCar.add(cars.get(9-i));
+            myCar.add(cars.get(i));
             p.setCars(myCar);
-            cars.get(9-i).setOwner(p);
+            cars.get(i).setOwner(p);
             session.save(p);
         }
         session.flush();
     }
 
-    /*public static void generateGarages() throws Exception{
+    public static void generateGarages() throws Exception{
         Random rnd=new Random();
+        List<Car> cars=getAllCars();
+        List<Person> people=getAllPeople();
+        for(int i=0;i<4;i++){
+           Garage g=new Garage("Haifa University, branch no: "+(i+1), "05"+rnd.nextInt(10)+"-"+rnd.nextInt(999999,9999999));
+           List<Car> myCar=new ArrayList<>();
+           List<Person> myp=new ArrayList<>();
+           //splitting cars into garages , arbitrary
+           for(int j = 25*i ; j < (25*(i+1)) ; j++){
+               myCar.add(cars.get(j));
+           }
+           g.setCars(myCar);
+           g.setPeople(myp);
+        }
 
-    }*/
+    }
+
+    public static List<Garage> getAllGarages() throws Exception{
+        CriteriaBuilder builder=session.getCriteriaBuilder();
+        CriteriaQuery<Garage> query=builder.createQuery(Garage.class);
+        query.from(Garage.class);
+        List<Garage> data=session.createQuery(query).getResultList();
+        return data;
+    }
+
+    public static List<Person> getAllPeople() throws Exception{
+        CriteriaBuilder builder=session.getCriteriaBuilder();
+        CriteriaQuery<Person> query=builder.createQuery(Person.class);
+        query.from(Person.class);
+        List<Person> data=session.createQuery(query).getResultList();
+        return data;
+    }
 
     public static List<Car> getAllCars() throws Exception{
         CriteriaBuilder builder=session.getCriteriaBuilder();
