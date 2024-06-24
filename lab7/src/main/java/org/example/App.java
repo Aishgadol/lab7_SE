@@ -35,7 +35,7 @@ public class App
     public static void generateCars() throws Exception {
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            Car car = new Car("MOO-" + random.nextInt(), 100000, 2000 + random.nextInt(19));
+            Car car = new Car("MOO-" + random.nextInt(), 90000+random.nextInt(100000), 2000 + random.nextInt(19));
             session.save(car);
             /*
                  * The call to session.flush() updates the DB immediately
@@ -71,17 +71,26 @@ public class App
         List<Car> cars=getAllCars();
         List<Person> people=getAllPeople();
         for(int i=0;i<4;i++){
-           Garage g=new Garage("Haifa University, branch no: "+(i+1), "05"+rnd.nextInt(10)+"-"+rnd.nextInt(999999,9999999));
+            String num="";
+            //make phone number
+            for(int j=0;j<7;j++){
+                num=num+rnd.nextInt(10);
+            }
+           Garage g=new Garage("Haifa University, branch no: "+(i+1), "05"+rnd.nextInt(10)+"-"+num);
            List<Car> myCar=new ArrayList<>();
            List<Person> myp=new ArrayList<>();
            //splitting cars into garages , arbitrary
            for(int j = 25*i ; j < (25*(i+1)) ; j++){
                myCar.add(cars.get(j));
            }
+           for(int j=0;j<15;j++){
+               myp.add(people.get(rnd.nextInt(people.size())));
+           }
            g.setCars(myCar);
-           g.setPeople(myp);
+           g.setOwners(myp);
+           session.save(g);
         }
-
+        session.flush();
     }
 
     public static List<Garage> getAllGarages() throws Exception{
@@ -137,6 +146,7 @@ public class App
 
             generateCars();
             generatePeople();
+            generateGarages();
 
             printAllCars();
 
