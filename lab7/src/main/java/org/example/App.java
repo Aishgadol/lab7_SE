@@ -3,6 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,11 +21,14 @@ public class App
 
     private static SessionFactory getSessionFactory() throws HibernateException{
         Configuration configuration=new Configuration();
+        Scanner s=new Scanner(System.in);
         // Add ALL of your entities here. You can also try adding a whole package.
         configuration.addAnnotatedClass(Car.class);
         configuration.addAnnotatedClass(Person.class);
         configuration.addAnnotatedClass(Garage.class);
-
+        System.out.println("Enter password to DB: ");
+        String pwd=s.nextLine();
+        configuration.setProperty("hibernate.connection.password",pwd);
         ServiceRegistry serviceRegistry=new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
