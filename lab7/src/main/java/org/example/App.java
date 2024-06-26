@@ -87,11 +87,19 @@ public class App
            for(int j = 25*i ; j < (25*(i+1)) ; j++){
                myCar.add(cars.get(j));
            }
+           for(int j=0;j<20;j++){
+               myCar.add(cars.get((j+rnd.nextInt(50000))%cars.size()));
+           }
            for(int j=0;j<5;j++){
                myp.add(people.get(rnd.nextInt(people.size())));
            }
            g.setCars(myCar);
            g.setOwners(myp);
+           for(Car c:myCar){
+               List<Garage> myg=c.getGarages();
+               myg.add(g);
+               c.setGarages(myg);
+           }
            session.save(g);
         }
         session.flush();
@@ -136,7 +144,39 @@ public class App
             System.out.print('\n');
         }
     }
+    private static void printGarageDetails() throws Exception{
+        List<Garage> glist=getAllGarages();
+        for(Garage g:glist){
+            System.out.println("Garage Address: " + g.getAddress());
+            System.out.println("Garage Phone Number: " + g.getPhoneNumber());
+            System.out.println("Cars in this Garage:");
+            for (Car c : g.getCars()) {
+                System.out.println("  License Plate: " + c.getLicensePlate());
+            }
+            System.out.println();
+        }
+    }
 
+    private static void printCarDetails() throws Exception{
+        List<Car> clist=getAllCars();
+        for(Car c : clist){
+            System.out.println("Car License Plate: " + c.getLicensePlate());
+            System.out.println("Car Price: " + c.getPrice());
+            System.out.println("Car Year: " + c.getYear());
+            System.out.println("Owner Details:");
+            if(c.getOwner()!=null){
+                Person owner=c.getOwner();
+                System.out.println("  Owner First Name: " + owner.getFirstName());
+                System.out.println("  Owner Last Name: " + owner.getLastName());
+                System.out.println("  Owner Email: " + owner.getEmailAddress());
+            }
+            System.out.println("Garages who handle this car: ");
+            for(Garage g:c.getGarages()){
+                System.out.println("Garage address: "+g.getAddress());
+            }
+            System.out.println();
+        }
+    }
     public static void main( String[] args )
     {
         try {
@@ -148,10 +188,11 @@ public class App
             generatePeople();
             generateGarages();
 
-            printAllCars();
+            System.out.println("Garage details & licence plates associated with each garage: ");
+            printGarageDetails();
+            System.out.println("Car details, owner details and addresses of garages that handle car: ");
+            printCarDetails();
 
-            Car c=new Car("mycar haha", 9,199);
-            session.save(c);
             session.flush();
 
             session.getTransaction().commit();//save everything
