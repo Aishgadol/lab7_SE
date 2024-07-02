@@ -26,9 +26,7 @@ public class App
         configuration.addAnnotatedClass(Car.class);
         configuration.addAnnotatedClass(Person.class);
         configuration.addAnnotatedClass(Garage.class);
-        System.out.println("Enter password to DB: ");
-        String pwd=s.nextLine();
-        configuration.setProperty("hibernate.connection.password",pwd);
+        configuration.setProperty("hibernate.connection.password","159753a");
         ServiceRegistry serviceRegistry=new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -177,6 +175,31 @@ public class App
             System.out.println();
         }
     }
+
+    public static void doSomething() {
+        Scanner s = new Scanner(System.in);
+        String firstName = "";
+        while (!firstName.equals("james")) {
+            try {
+                session.beginTransaction();
+                Person p = session.get(Person.class, 1);
+                System.out.println("type james if you want to stop lol:   ");
+                String f = s.nextLine();
+                firstName = f;
+                p.setFirstName(f);
+                session.update(p);
+                session.flush();
+                session.getTransaction().commit();
+            } catch (Exception e) {
+                if (session != null) {
+                    session.getTransaction().rollback();
+                }
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     public static void main( String[] args )
     {
         try {
@@ -195,7 +218,8 @@ public class App
 
             session.flush();
 
-            session.getTransaction().commit();//save everything
+            session.getTransaction().commit();
+            doSomething();
         }
         catch(Exception e) {
             if (session != null) {
